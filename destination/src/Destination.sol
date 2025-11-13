@@ -71,7 +71,7 @@ contract Destination is AccessControl {
         address _to,
         uint256 _amount
     ) public onlyRole(WARDEN_ROLE) {
-        address wrapped = underlying_tokens[_underlying_token];
+        address wrapped = wrapped_tokens[_underlying_token];
         require(wrapped != address(0), "token not registered");
         require(_to != address(0), "to=0");
         require(_amount > 0, "amount=0");
@@ -91,7 +91,7 @@ contract Destination is AccessControl {
         address _recipient,
         uint256 _amount
     ) public {
-        address underlying = wrapped_tokens[_wrapped_token];
+        address underlying = underlying_tokens[_wrapped_token];
         require(underlying != address(0), "unknown wrapped token");
         require(_recipient != address(0), "recipient=0");
         require(_amount > 0, "amount=0");
