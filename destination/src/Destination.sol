@@ -23,11 +23,10 @@ contract Destination is AccessControl {
     event Wrap(address indexed underlying_token, address indexed wrapped_token, address indexed to, uint256 amount);
     event Unwrap(address indexed underlying_token, address indexed wrapped_token, address indexed to, uint256 amount);
 
-    constructor() {
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(CREATOR_ROLE, msg.sender);
-        // optionally: give deployer warden privileges for testing; remove if not desired
-        _grantRole(WARDEN_ROLE, msg.sender);
+   constructor(address admin) {
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+        _grantRole(CREATOR_ROLE, admin);
+        _grantRole(WARDEN_ROLE, admin);
     }
 
     /// @notice Number of wrapped tokens created by this contract
