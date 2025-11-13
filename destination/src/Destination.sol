@@ -86,7 +86,11 @@ contract Destination is AccessControl {
     /// @param _wrapped_token the wrapped token address on the destination chain
     /// @param _recipient the intended source-chain recipient of the underlying asset
     /// @param _amount amount of wrapped tokens to burn
-    function unwrap(address underlying, address wrapped, address frm, address to, uint256 amount) public {
+    function unwrap(
+        address _wrapped_token,
+        address _recipient,
+        uint256 _amount
+    ) public {
         address underlying = underlying_tokens[_wrapped_token];
         require(underlying != address(0), "unknown wrapped token");
         require(_recipient != address(0), "recipient=0");
@@ -98,6 +102,6 @@ contract Destination is AccessControl {
         // because the token overrides burnFrom to check MINTER_ROLE for the caller (this contract).
         BridgeToken(_wrapped_token).burnFrom(msg.sender, _amount);
 
-        emit Unwrap(underlying, _wrapped_token, msg.sender, _recipient, _amount);
+        emit Unwrap(underlying, _wrapped_token, _recipient, _amount);
     }
 }
