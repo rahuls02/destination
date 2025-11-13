@@ -41,24 +41,25 @@ contract Destination is AccessControl {
     /// @param symbol symbol for the wrapped token
     /// @return wrapped the address of the new BridgeToken on the destination chain
     function createToken(
-        address _underlying_token,
-        string memory name,
-        string memory symbol
+    address _underlying_token,
+    string memory name,
+    string memory symbol
     ) public onlyRole(CREATOR_ROLE) returns (address wrapped) {
         require(_underlying_token != address(0), "underlying=0");
-        require(underlying_tokens[_underlying_token] == address(0), "already registered");
+        require(wrapped_tokens[_underlying_token] == address(0), "already registered");
 
-        // BridgeToken constructor: (underlying, name, symbol, admin)
         BridgeToken token = new BridgeToken(_underlying_token, name, symbol, address(this));
         wrapped = address(token);
 
-        // map both directions
-        underlying_tokens[_underlying_token] = wrapped;
-        wrapped_tokens[wrapped] = _underlying_token;
+        // The tests expect THIS mapping direction:
+        wrapped_tokens[_underlying_token] = wrapped;
+        underlying_tokens[wrapped] = _underlying_token;
+
         tokens.push(wrapped);
 
         emit Creation(_underlying_token, wrapped);
     }
+
 
     /// @notice Mint wrapped tokens to a recipient after a verified deposit on the source chain.
     /// @dev only addresses with WARDEN_ROLE may call.
